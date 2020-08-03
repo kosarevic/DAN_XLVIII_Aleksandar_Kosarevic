@@ -79,7 +79,27 @@ namespace Zadatak_1
                 }
                 else
                 {
-                    MessageBox.Show("Username or password is incorrect.");
+                    using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ToString()))
+                    {
+                        var cmd = new SqlCommand(@"insert into tblUser values (@Username, @Password);", conn);
+                        cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
+                        cmd.Parameters.AddWithValue("@Password", txtPassword.Password);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("User Successfully created.", "Notification");
+                        if (!OrderValidation.UserHasOrder(user))
+                        {
+                            UserWindow dashboard = new UserWindow(user);
+                            dashboard.Show();
+                            this.Close();
+                        }
+                        else
+                        {
+                            //If user has order with pending approval, application exits to the login screen.
+                            return;
+                        }
+                    }
                 }
             }
             catch (Exception ex)

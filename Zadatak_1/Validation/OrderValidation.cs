@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace Zadatak_1.Validation
         {
             List<Order> AllOrders = new List<Order>();
 
-            string ConnectionString = @"Data Source=(local);Initial Catalog=Zadatak_1;Integrated Security=True;";
+            string ConnectionString = ConfigurationManager.ConnectionStrings["con"].ToString(); ;
 
             using (SqlConnection conn = new SqlConnection(ConnectionString))
             {
