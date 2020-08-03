@@ -40,7 +40,3 @@ insert into tblUser values ('Zaposleni','Zaposleni');
 insert into tblMeal values ('Meal 1', 100);
 insert into tblMeal values ('Meal 2', 200);
 insert into tblMeal values ('Meal 3', 300);
-
-select * from tblUser
-
-select * from tblOrder
