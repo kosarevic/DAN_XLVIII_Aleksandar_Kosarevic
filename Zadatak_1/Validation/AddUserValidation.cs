@@ -10,9 +10,11 @@ using Zadatak_1.Model;
 
 namespace Zadatak_1.Validation
 {
+    /// <summary>
+    /// Class made with sole purpose for validation of user creation process (JMBG).
+    /// </summary>
     static class AddUserValidation
     {
-
         //Static variables made to store usefull data after validation.
         public static string dateOfBirth = "";
         public static string expirationDate = "";
@@ -85,6 +87,7 @@ namespace Zadatak_1.Validation
                     cancel = true;
                     break;
                 }
+                //Password validation
                 else if(e.Password != "Gost")
                 {
                     MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("incorrect password, value must be Gost", "Notification");

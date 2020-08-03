@@ -117,7 +117,6 @@ namespace Zadatak_1.ViewModel
                     cmd.Parameters.AddWithValue("@Time", DateTime.Now);
                     cmd.Parameters.AddWithValue("@Amount", total);
                     cmd.Parameters.AddWithValue("@Approved", false);
-
                     conn.Open();
                     cmd.ExecuteNonQuery();
                     conn.Close();

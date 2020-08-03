@@ -86,7 +86,7 @@ namespace Zadatak_1
                 else
                 {
                     user = new User(txtUsername.Text, txtPassword.Password);
-
+                    //If all inputs are correct, user will be added to the database.
                     if (AddUserValidation.Validate(user))
                     {
                         using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ToString()))
@@ -95,6 +95,7 @@ namespace Zadatak_1
                             cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
                             cmd.Parameters.AddWithValue("@Password", txtPassword.Password);
                             conn.Open();
+                            cmd.ExecuteNonQuery();
                             user.Id = Convert.ToInt32(cmd.ExecuteScalar());
                             conn.Close();
                             MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("User Successfully created.", "Notification");
