@@ -35,10 +35,9 @@ namespace Zadatak_1
             try
             {
                 //User is extracted from the database matching inserted paramaters Username and Password.
-                SqlCommand query = new SqlCommand("SELECT * FROM tblUser WHERE Username=@Username AND Password=@Password", sqlCon);
+                SqlCommand query = new SqlCommand("SELECT * FROM tblUser WHERE Username=@Username", sqlCon);
                 query.CommandType = CommandType.Text;
                 query.Parameters.AddWithValue("@Username", txtUsername.Text);
-                query.Parameters.AddWithValue("@Password", txtPassword.Password);
                 sqlCon.Open();
                 SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query);
                 DataTable dataTable = new DataTable();
@@ -55,14 +54,15 @@ namespace Zadatak_1
                     };
                 }
                 //If username is as value below, Employe window is engaged.
-                if (user.Username == "Zaposleni")
+                if (user.Username == "Zaposleni" && user.Password == "Zaposleni" && txtPassword.Password == "Zaposleni")
                 {
                     EmployeWindow dashboard = new EmployeWindow();
                     dashboard.Show();
                     this.Close();
+                    return;
                 }
                 //If username is as value below, User window is engaged.
-                else if (user.Password == "Gost")
+                else if (txtPassword.Password == "Gost" && user.Password == "Gost" && user.Username != null)
                 {
                     //Validation if user has pending order to be approved.
                     if (!OrderValidation.UserHasOrder(user))
@@ -70,6 +70,7 @@ namespace Zadatak_1
                         UserWindow dashboard = new UserWindow(user);
                         dashboard.Show();
                         this.Close();
+                        return;
                     }
                     else
                     {
@@ -77,27 +78,29 @@ namespace Zadatak_1
                         return;
                     }
                 }
+                else if (txtPassword.Password != "Gost" && user.Username != null)
+                {
+                    MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("Incorrect password, please try again.", "Notification");
+                    return;
+                }
                 else
                 {
-                    using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ToString()))
+                    user = new User(txtUsername.Text, txtPassword.Password);
+
+                    if (AddUserValidation.Validate(user))
                     {
-                        var cmd = new SqlCommand(@"insert into tblUser values (@Username, @Password);", conn);
-                        cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
-                        cmd.Parameters.AddWithValue("@Password", txtPassword.Password);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("User Successfully created.", "Notification");
-                        if (!OrderValidation.UserHasOrder(user))
+                        using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["con"].ToString()))
                         {
+                            var cmd = new SqlCommand(@"insert into tblUser values (@Username, @Password); SELECT SCOPE_IDENTITY();", conn);
+                            cmd.Parameters.AddWithValue("@Username", txtUsername.Text);
+                            cmd.Parameters.AddWithValue("@Password", txtPassword.Password);
+                            conn.Open();
+                            user.Id = Convert.ToInt32(cmd.ExecuteScalar());
+                            conn.Close();
+                            MessageBoxResult messageBoxResult = System.Windows.MessageBox.Show("User Successfully created.", "Notification");
                             UserWindow dashboard = new UserWindow(user);
                             dashboard.Show();
                             this.Close();
-                        }
-                        else
-                        {
-                            //If user has order with pending approval, application exits to the login screen.
-                            return;
                         }
                     }
                 }
