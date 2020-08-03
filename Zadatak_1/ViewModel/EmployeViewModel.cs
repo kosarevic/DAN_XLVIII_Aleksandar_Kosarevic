@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Zadatak_1.ViewModel
     /// </summary>
     class EmployeViewModel : INotifyPropertyChanged
     {
-        static readonly string ConnectionString = @"Data Source=(local);Initial Catalog=Zadatak_1;Integrated Security=True;";
+        static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["con"].ToString();
         public ObservableCollection<Order> Orders { get; set; }
 
         private Order order;
